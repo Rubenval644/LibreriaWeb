@@ -1,14 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<!DOCTYPE html>
 <html>
-<head><title>Login</title></head>
+<head>
+    <title>Login</title>
+</head>
 <body>
 <h2>Iniciar Sesión</h2>
-<form action="LoginServlet" method="post">
-    Email: <input type="email" name="email" required><br>
-    Password: <input type="password" name="password" required><br>
-    <button type="submit">Ingresar</button>
+<form action="../LoginServlet" method="post">
+    Email: <input type="text" name="email" required><br>
+    Contraseña: <input type="password" name="password" required><br>
+    <input type="submit" value="Ingresar">
 </form>
-<p style="color:red;">${error}</p>
-<a href="registro.jsp">Registrarse</a>
+
+<% 
+    String error = request.getParameter("error");
+    if (error != null) {
+        out.println("<p style='color:red'>" + error + "</p>");
+    }
+%>
 </body>
 </html>

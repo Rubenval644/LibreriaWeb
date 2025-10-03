@@ -2,10 +2,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="modelo.Producto" %>
+<%@ page import="modelo.Cliente" %>
 
 <%
     ProductoDAO dao = new ProductoDAO();
     List<Producto> lista = dao.listar();
+
+    Cliente clienteSesion = (Cliente) session.getAttribute("cliente");
 %>
 
 <html>
@@ -19,10 +22,20 @@
             <nav class="navbar">
                 <a href="#" class="logo">LibreCrea</a>
                 <ul class="links">
-                    <li><a href="#">Inicio</a></li>
+                    <li><a href="tienda.jsp">Inicio</a></li>
                     <li><a href="#nosotros">Nosotros</a></li>
                     <li><a href="#productos">Productos</a></li>
+                    <li><a href="#">Carrito</a></li>
 
+                    <% if (clienteSesion == null) { %>
+                    
+                    <li><a href="registroClienteWeb.jsp">Registrarse</a></li>
+                    <li><a href="loginCliente.jsp">Iniciar sesión</a></li>
+                        <% } else {%>
+                    
+                    <li>Bienvenido, <strong><%= clienteSesion.getNombre()%></strong></li>
+                    <li><a href="ClienteServlet?action=logout">Cerrar sesión</a></li>
+                        <% } %>
                 </ul>
             </nav>
         </header>
@@ -60,25 +73,25 @@
                 <h2>Productos</h2>
                 <br>
                 <br>
-            <div class="contenedor">
-                <% for (Producto p : lista) {%>
-                <div class="producto">
-                    <img src="img//<%= p.getImagen()%>" alt="<%= p.getNombre()%>" width="150" height="150">
-                    <h3><%= p.getNombre()%></h3>
-                    <p><%= p.getDescripcion()%></p>
-                    <p>Precio: S/. <%= p.getPrecio()%></p>
-                    <p>Stock: <%= p.getStock()%></p>
-                    <form action="CompraServlet" method="post">
-                        <input type="hidden" name="id" value="<%= p.getId()%>">
-                        <% if (p.getStock() > 0) { %>
-                        <button class="btn" type="submit">Comprar</button>
-                        <% } else { %>
-                        <button class="btn2" type="button" disabled>Agotado</button>
-                        <% } %>
-                    </form>
+                <div class="contenedor">
+                    <% for (Producto p : lista) {%>
+                    <div class="producto">
+                        <img src="img//<%= p.getImagen()%>" alt="<%= p.getNombre()%>" width="150" height="150">
+                        <h3><%= p.getNombre()%></h3>
+                        <p><%= p.getDescripcion()%></p>
+                        <p>Precio: S/. <%= p.getPrecio()%></p>
+                        <p>Stock: <%= p.getStock()%></p>
+                        <form action="CompraServlet" method="post">
+                            <input type="hidden" name="id" value="<%= p.getId()%>">
+                            <% if (p.getStock() > 0) { %>
+                            <button class="btn" type="submit">Comprar</button>
+                            <% } else { %>
+                            <button class="btn2" type="button" disabled>Agotado</button>
+                            <% } %>
+                        </form>
+                    </div>
+                    <% }%>
                 </div>
-                <% }%>
-            </div>
             </section>
         </main> 
     </body>

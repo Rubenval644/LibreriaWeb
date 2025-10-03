@@ -1,17 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*,modelo.Producto" %>
+<%@ page import="java.util.*,dao.ClienteDAO,modelo.Cliente" %>
 
 <%
- List<Producto> lista = (List<Producto>) request.getAttribute("lista");
-
-    if (lista == null) {
-        lista = new ArrayList<>();
-    }
+    ClienteDAO dao = new ClienteDAO();
+    List<Cliente> lista = dao.listar();
 %>
 
 <html>
     <head>
-        <title>Lista de Productos - Panel Administrativo</title>
+        <title>Lista de Clientes - Panel Administrativo</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -56,34 +53,35 @@
         </style>
     </head>
     <body>
-        <h2>Lista de Productos</h2>
+        <h2>Lista de Clientes</h2>
 
-        <a href="ProductoServlet?action=nuevo" class="btn-agregar">Agregar Producto</a>
+        <a href="ClienteServlet?action=nuevo" class="btn-agregar">Registrar Cliente</a>
         <a href="${pageContext.request.contextPath}/admin/panel.jsp" class="btn-agregar">Volver al panel</a>
 
         <table>
             <tr>
                 <th>ID</th>
-                <th>Imagen</th>
                 <th>Nombre</th>
-                <th>Precio</th>
-                <th>Stock</th>
+                <th>Apellido</th>
+                <th>Sexo</th>
+                <th>Email</th>
+                <th>Password</th>
                 <th>Acciones</th>
             </tr>
 
-            <% for (Producto p : lista) {%>
+            <% for (Cliente c : lista) {%>
             <tr>
-                <td><%= p.getId()%></td>
-                <td>
-                    <img src="img/<%= p.getImagen() %>" alt="<%= p.getNombre() %>" width="100" height="100">
-                </td>
-                <td><%= p.getNombre()%></td>
-                <td>S/. <%= p.getPrecio()%></td>
-                <td><%= p.getStock()%></td>
+                <td><%= c.getId()%></td>
+                <td><%= c.getNombre()%></td>
+                <td><%= c.getApellido()%></td>
+                <td><%= c.getSexo()%></td>
+                <td><%= c.getEmail()%></td>
+                <td><%= c.getPassword()%></td>
 
                 <td>
-                    <a href="ProductoServlet?action=editar&id=<%= p.getId()%>" class="btn-editar">Editar</a>
-                    <a href="ProductoServlet?action=eliminar&id=<%= p.getId()%>" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este producto?');">
+                    <a href="ClienteServlet?action=editar&id=<%= c.getId()%>" class="btn-editar">Editar</a>
+                    <a href="ClienteServlet?action=eliminar&id=<%= c.getId()%>" class="btn-eliminar" 
+                       onclick="return confirm('¿Estás seguro de eliminar este cliente?');">
                         Eliminar</a>
                 </td>
             </tr>

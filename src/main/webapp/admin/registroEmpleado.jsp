@@ -5,10 +5,39 @@
     <meta charset="UTF-8">
     <title>Nuevo Empleado</title>
 </head>
+<style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            form {
+                max-width: 400px;
+            }
+            label {
+                display: block;
+                margin: 8px 0 4px;
+            }
+            input {
+                width: 100%;
+                padding: 6px;
+                margin-bottom: 10px;
+            }
+            button {
+                padding: 8px 12px;
+                background: #28a745;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+            a {
+                display: inline-block;
+                margin-top: 10px;
+            }
+        </style>
 <body>
     <h2>Registrar Nuevo Empleado</h2>
 
-    <form action="<%=request.getContextPath()%>/EmpleadoServlet" method="post">
+    <form action="${pageContext.request.contextPath}/EmpleadoServlet" method="post">
     <input type="hidden" name="accion" value="insertar">
 
     <label>Nombre:</label><br>

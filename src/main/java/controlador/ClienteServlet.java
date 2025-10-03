@@ -1,8 +1,7 @@
 package controlador;
 
-import dao.UsuarioDAO;
-import modelo.Usuario;
-
+import dao.ClienteDAO;
+import modelo.Cliente;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,37 +14,31 @@ import java.util.List;
 @WebServlet(name = "ClienteServlet", urlPatterns = {"/ClienteServlet"})
 public class ClienteServlet extends HttpServlet {
 
-    private UsuarioDAO dao = new UsuarioDAO();
+    private ClienteDAO dao = new ClienteDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession sesion = request.getSession();
-        Usuario user = (Usuario) sesion.getAttribute("usuario");
-
-        if (user == null) {
-            response.sendRedirect("admin/login.jsp?error=Debes iniciar sesión");
-            return;
-        }
-
         String action = request.getParameter("action");
-        if (action == null) action = "listar";
+        if (action == null) {
+            action = "listar";
+        }
 
         switch (action) {
             case "listar":
-                List<Usuario> clientes = dao.listarPorRol("CLIENTE");
+                List<Cliente> clientes = dao.listar();
                 request.setAttribute("lista", clientes);
                 request.getRequestDispatcher("admin/listarClientes.jsp").forward(request, response);
                 break;
 
             case "nuevo":
-                request.getRequestDispatcher("admin/agregarCliente.jsp").forward(request, response);
+                request.getRequestDispatcher("admin/registroCliente.jsp").forward(request, response);
                 break;
 
             case "editar":
                 int idEdit = Integer.parseInt(request.getParameter("id"));
-                Usuario c = dao.obtenerPorId(idEdit);
+                Cliente c = dao.obtenerPorId(idEdit);
                 request.setAttribute("cliente", c);
                 request.getRequestDispatcher("admin/editarCliente.jsp").forward(request, response);
                 break;
@@ -54,6 +47,14 @@ public class ClienteServlet extends HttpServlet {
                 int idDel = Integer.parseInt(request.getParameter("id"));
                 dao.eliminar(idDel);
                 response.sendRedirect("ClienteServlet?action=listar");
+                break;
+
+            case "logout": // 🔹 cerrar sesión del cliente
+                HttpSession sesion = request.getSession(false);
+                if (sesion != null) {
+                    sesion.invalidate();
+                }
+                response.sendRedirect("tienda.jsp");
                 break;
 
             default:
@@ -66,22 +67,53 @@ public class ClienteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String op = request.getParameter("action"); 
+        String accion = request.getParameter("accion");
 
-        String nombre = request.getParameter("nombre");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        if ("insertar".equals(accion)) {
+            // Registrar cliente
+            String nombre = request.getParameter("nombre");
+            String apellido = request.getParameter("apellido");
+            String sexo = request.getParameter("sexo");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
 
-        if ("insertar".equals(op)) {
-            Usuario u = new Usuario(0, nombre, email, password, "CLIENTE");
-            dao.insertar(u);
+            Cliente c = new Cliente(0, nombre, apellido, sexo, email, password);
+            dao.insertar(c);
 
-        } else if ("actualizar".equals(op)) {
+            String origen = request.getParameter("origen");
+            if ("web".equals(origen)) {
+                response.sendRedirect("tienda.jsp?registro=ok");
+            } else {
+                response.sendRedirect("ClienteServlet?action=listar");
+            }
+
+        } else if ("actualizar".equals(accion)) {
+            // Actualizar cliente
             int id = Integer.parseInt(request.getParameter("id"));
-            Usuario u = new Usuario(id, nombre, email, password, "CLIENTE");
-            dao.actualizar(u);
-        }
+            String nombre = request.getParameter("nombre");
+            String apellido = request.getParameter("apellido");
+            String sexo = request.getParameter("sexo");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
 
-        response.sendRedirect("ClienteServlet?action=listar");
+            Cliente c = new Cliente(id, nombre, apellido, sexo, email, password);
+            dao.actualizar(c);
+            response.sendRedirect("ClienteServlet?action=listar");
+
+        } else if ("login".equals(accion)) {
+            //Login cliente
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+
+            Cliente cliente = dao.validarLogin(email, password);
+            if (cliente != null) {
+                HttpSession sesion = request.getSession();
+                sesion.setAttribute("cliente", cliente);
+                response.sendRedirect("tienda.jsp");
+            } else {
+                request.setAttribute("error", "Email o contraseña incorrectos");
+                request.getRequestDispatcher("loginCliente.jsp").forward(request, response);
+            }
+        }
     }
 }

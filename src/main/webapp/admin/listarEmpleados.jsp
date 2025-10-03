@@ -11,13 +11,64 @@
         <meta charset="UTF-8">
         <title>Lista de Empleados</title>
     </head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background: #f4f4f4;
+        }
+        a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 2px;
+        }
+        .btn-editar {
+            background: #007bff;
+            color: white;
+        }
+        .btn-eliminar {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-agregar {
+            display: inline-block;
+            margin-top: 10px;
+            background: #28a745;
+            color: white;
+        }
+        .btn-volver {
+            display: inline-block;
+            margin-top: 10px;
+            background: blue;
+            color: white;
+        }
+
+    </style>
     <body>
-        <h2>Listado de Empleados</h2>
+        <h2>Lista de Empleados</h2>
+        <a href="${pageContext.request.contextPath}/admin/registroEmpleado.jsp" class="btn-agregar">Agregar Nuevo Empleado</a>
+        <a href="${pageContext.request.contextPath}/admin/panel.jsp" class="btn-volver">Volver al Panel Admin</a>
         <table border="1" cellpadding="5" cellspacing="0">
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
-                <th>Email</th>
+                <th>Correo</th>
                 <th>Rol</th>
                 <th>Acciones</th>
             </tr>
@@ -30,14 +81,13 @@
                 <td><%= u.getEmail()%></td>
                 <td><%= u.getRol()%></td>
                 <td>
-                    <a href="EditarUsuarioServlet?id=<%= u.getId()%>">Editar</a> |
-                    <a href="EliminarUsuarioServlet?id=<%= u.getId()%>" onclick="return confirm('¿Eliminar este empleado?')">Eliminar</a>
+                    <a href="EmpleadoServlet?action=editar&id=<%= u.getId()%>" class="btn-editar">Editar</a>
+                    <a href="EmpleadoServlet?action=eliminar&id=<%= u.getId()%>" class="btn-eliminar" onclick="return confirm('¿Eliminar este empleado?')">Eliminar</a>
                 </td>
             </tr>
             <% }%>
         </table>
         <br>
-        <a href="${pageContext.request.contextPath}/admin/registroEmpleado.jsp">Agregar Nuevo Empleado</a><br>
-        <a href="${pageContext.request.contextPath}/admin/panel.jsp">Volver al Panel Admin</a>
+
     </body>
 </html>

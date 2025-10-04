@@ -69,6 +69,7 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Correo</th>
+                <th>Contraseña</th>
                 <th>Rol</th>
                 <th>Acciones</th>
             </tr>
@@ -79,6 +80,7 @@
                 <td><%= u.getId()%></td>
                 <td><%= u.getNombre()%></td>
                 <td><%= u.getEmail()%></td>
+                <td><%= u.getPassword()%></td>
                 <td><%= u.getRol()%></td>
                 <td>
                     <a href="EmpleadoServlet?action=editar&id=<%= u.getId()%>" class="btn-editar">Editar</a>

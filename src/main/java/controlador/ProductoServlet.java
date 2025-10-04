@@ -20,12 +20,30 @@ public class ProductoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "listar";
+        if (action == null) {
+            action = "listar";
+        }
 
         switch (action) {
             case "listar":
+                // Listar todos los productos en el panel admin
                 List<Producto> lista = dao.listar();
                 request.setAttribute("lista", lista);
+                request.getRequestDispatcher("admin/listar.jsp").forward(request, response);
+                break;
+
+            case "filtrar":
+                // Filtrar productos por categoría
+                String categoria = request.getParameter("categoria");
+                List<Producto> listaFiltrada;
+
+                if (categoria == null || categoria.isEmpty()) {
+                    listaFiltrada = dao.listar(); // Si no hay categoría, mostrar todos
+                } else {
+                    listaFiltrada = dao.listarPorCategoria(categoria);
+                }
+
+                request.setAttribute("lista", listaFiltrada);
                 request.getRequestDispatcher("admin/listar.jsp").forward(request, response);
                 break;
 
@@ -34,16 +52,37 @@ public class ProductoServlet extends HttpServlet {
                 break;
 
             case "editar":
-                int idEdit = Integer.parseInt(request.getParameter("id"));
-                Producto p = dao.obtenerPorId(idEdit);
-                request.setAttribute("producto", p);
-                request.getRequestDispatcher("admin/editar.jsp").forward(request, response);
+                try {
+                    int idEdit = Integer.parseInt(request.getParameter("id"));
+                    Producto p = dao.obtenerPorId(idEdit);
+                    request.setAttribute("producto", p);
+                    request.getRequestDispatcher("admin/editar.jsp").forward(request, response);
+                } catch (NumberFormatException e) {
+                    response.sendRedirect("ProductoServlet?action=listar");
+                }
                 break;
 
             case "eliminar":
-                int idDel = Integer.parseInt(request.getParameter("id"));
-                dao.eliminar(idDel);
+                try {
+                    int idDel = Integer.parseInt(request.getParameter("id"));
+                    dao.eliminar(idDel);
+                } catch (NumberFormatException e) {
+                }
                 response.sendRedirect("ProductoServlet?action=listar");
+                break;
+
+            case "inicio":
+                // Mostrar solo 5 productos destacados en tienda.jsp
+                List<Producto> listaInicio = dao.listarLimit(8);
+                request.setAttribute("lista", listaInicio);
+                request.getRequestDispatcher("tienda.jsp").forward(request, response);
+                break;
+
+            case "todos":
+                // Mostrar todos los productos en productos.jsp
+                List<Producto> todos = dao.listar();
+                request.setAttribute("lista", todos);
+                request.getRequestDispatcher("productos.jsp").forward(request, response);
                 break;
 
             default:
@@ -56,28 +95,35 @@ public class ProductoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String op = request.getParameter("action"); 
+        String op = request.getParameter("action");
 
         if ("insertar".equals(op)) {
+            // Insertar nuevo producto
             String nombre = request.getParameter("nombre");
             String descripcion = request.getParameter("descripcion");
             double precio = Double.parseDouble(request.getParameter("precio"));
             int stock = Integer.parseInt(request.getParameter("stock"));
             String imagen = request.getParameter("imagen");
+            String categoria = request.getParameter("categoria");
 
-            Producto p = new Producto(0, nombre, descripcion, precio, stock, imagen);
+            Producto p = new Producto(0, nombre, descripcion, precio, stock, imagen, categoria);
             dao.insertar(p);
 
         } else if ("actualizar".equals(op)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            String nombre = request.getParameter("nombre");
-            String descripcion = request.getParameter("descripcion");
-            double precio = Double.parseDouble(request.getParameter("precio"));
-            int stock = Integer.parseInt(request.getParameter("stock"));
-            String imagen = request.getParameter("imagen");
+            // Actualizar producto existente
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                String nombre = request.getParameter("nombre");
+                String descripcion = request.getParameter("descripcion");
+                double precio = Double.parseDouble(request.getParameter("precio"));
+                int stock = Integer.parseInt(request.getParameter("stock"));
+                String imagen = request.getParameter("imagen");
+                String categoria = request.getParameter("categoria");
 
-            Producto p = new Producto(id, nombre, descripcion, precio, stock, imagen);
-            dao.actualizar(p);
+                Producto p = new Producto(id, nombre, descripcion, precio, stock, imagen, categoria);
+                dao.actualizar(p);
+            } catch (NumberFormatException e) {
+            }
         }
 
         response.sendRedirect("ProductoServlet?action=listar");

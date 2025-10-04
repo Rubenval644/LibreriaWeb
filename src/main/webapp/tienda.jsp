@@ -6,7 +6,7 @@
 
 <%
     ProductoDAO dao = new ProductoDAO();
-    List<Producto> lista = dao.listar();
+    List<Producto> lista = dao.listarLimit(5);
 
     Cliente clienteSesion = (Cliente) session.getAttribute("cliente");
 %>
@@ -28,11 +28,9 @@
                     <li><a href="#">Carrito</a></li>
 
                     <% if (clienteSesion == null) { %>
-                    
                     <li><a href="registroClienteWeb.jsp">Registrarse</a></li>
                     <li><a href="loginCliente.jsp">Iniciar sesión</a></li>
                         <% } else {%>
-                    
                     <li>Bienvenido, <strong><%= clienteSesion.getNombre()%></strong></li>
                     <li><a href="ClienteServlet?action=logout">Cerrar sesión</a></li>
                         <% } %>
@@ -64,19 +62,17 @@
                     </div>
 
                     <div class="about-img">
-                        <img src="img/libreria.png" alt="acerca">
+                        <img src="img/librecrea.png" alt="acerca">
                     </div>
                 </div>
             </section>    
 
             <section id="productos" class="product">
-                <h2>Productos</h2>
-                <br>
-                <br>
+                <h2>Productos Destacados</h2>
                 <div class="contenedor">
                     <% for (Producto p : lista) {%>
                     <div class="producto">
-                        <img src="img//<%= p.getImagen()%>" alt="<%= p.getNombre()%>" width="150" height="150">
+                        <img src="img/<%= p.getImagen()%>" alt="<%= p.getNombre()%>" width="150" height="150">
                         <h3><%= p.getNombre()%></h3>
                         <p><%= p.getDescripcion()%></p>
                         <p>Precio: S/. <%= p.getPrecio()%></p>
@@ -92,7 +88,12 @@
                     </div>
                     <% }%>
                 </div>
+
+                <div class="btn-ver-mas">
+                    <a href="productos.jsp">Ver mas productos</a>
+                </div>
             </section>
-        </main> 
+        </main>
+
     </body>
 </html>

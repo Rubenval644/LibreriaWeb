@@ -4,8 +4,7 @@
     box-sizing: border-box;
     text-decoration: none;
     list-style: none;
-    scroll-behavior: smooth;
-    /*para el deslizamiento*/
+    scroll-behavior: smooth; /*para el deslizamiento*/
 }
 
 body {
@@ -24,6 +23,7 @@ header {
 .container {
     max-width: 1340px;
     margin: 0 auto;
+    
 }
 
 /*---------------------------------------------------------------------*/
@@ -163,4 +163,22 @@ hr {
     border-radius: 15px;
     width: 100%;
     height: 500px;
+}
+
+/*-------Productos destacados-----------*/
+.btn-ver-mas {
+    text-align:center; 
+    margin-top:20px;
+    display: inline-block;
+    background-color: blue;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.btn-ver-mas a{
+    color: white;
+}
+.btn-ver-mas:hover {
+    background: #007bff;
 }

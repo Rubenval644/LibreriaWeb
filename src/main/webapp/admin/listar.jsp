@@ -1,9 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*,modelo.Producto" %>
+<%@ page import="java.util.*, modelo.Producto" %>
 
 <%
- List<Producto> lista = (List<Producto>) request.getAttribute("lista");
-
+    List<Producto> lista = (List<Producto>) request.getAttribute("lista");
     if (lista == null) {
         lista = new ArrayList<>();
     }
@@ -58,6 +57,28 @@
     <body>
         <h2>Lista de Productos</h2>
 
+
+        <form action="ProductoServlet" method="get" style="margin-bottom:15px;">
+            <input type="hidden" name="action" value="filtrar">
+            <label for="categoria">Filtrar por categoría:</label>
+            <select name="categoria" id="categoria" onchange="this.form.submit()">
+                <option value="">Todas</option>
+                <%
+                    Set<String> categorias = new HashSet<>();
+                    for (Producto p : lista) {
+                        if (p.getCategoria() != null && !p.getCategoria().isEmpty()) {
+                            categorias.add(p.getCategoria());
+                        }
+                    }
+                    for (String cat : categorias) {
+                %>
+                <option value="<%= cat%>" <%= cat.equals(request.getParameter("categoria")) ? "selected" : ""%>>
+                    <%= cat%>
+                </option>
+                <% } %>
+            </select>
+        </form>
+
         <a href="ProductoServlet?action=nuevo" class="btn-agregar">Agregar Producto</a>
         <a href="${pageContext.request.contextPath}/admin/panel.jsp" class="btn-agregar">Volver al panel</a>
 
@@ -66,6 +87,7 @@
                 <th>ID</th>
                 <th>Imagen</th>
                 <th>Nombre</th>
+                <th>Categoría</th>
                 <th>Precio</th>
                 <th>Stock</th>
                 <th>Acciones</th>
@@ -75,16 +97,16 @@
             <tr>
                 <td><%= p.getId()%></td>
                 <td>
-                    <img src="img/<%= p.getImagen() %>" alt="<%= p.getNombre() %>" width="100" height="100">
+                    <img src="img/<%= p.getImagen()%>" alt="<%= p.getNombre()%>" width="100" height="100">
                 </td>
                 <td><%= p.getNombre()%></td>
+                <td><%= p.getCategoria() != null ? p.getCategoria() : "Sin categoría"%></td>
                 <td>S/. <%= p.getPrecio()%></td>
                 <td><%= p.getStock()%></td>
-
                 <td>
                     <a href="ProductoServlet?action=editar&id=<%= p.getId()%>" class="btn-editar">Editar</a>
-                    <a href="ProductoServlet?action=eliminar&id=<%= p.getId()%>" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este producto?');">
-                        Eliminar</a>
+                    <a href="ProductoServlet?action=eliminar&id=<%= p.getId()%>" class="btn-eliminar"
+                       onclick="return confirm('¿Estás seguro de eliminar este producto?');">Eliminar</a>
                 </td>
             </tr>
             <% }%>

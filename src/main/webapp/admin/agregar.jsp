@@ -39,6 +39,7 @@
             <input type="hidden" name="action" value="insertar">
             Nombre: <input type="text" name="nombre"><br>
             Descripción: <input type="text" name="descripcion"><br>
+            Categoría: <input type="text" name="categoria" value="${producto != null ? producto.categoria : ''}" required><br>
             Precio: <input type="number" step="0.01" name="precio"><br>
             Stock: <input type="number" name="stock"><br>
             Imagen (ruta): 

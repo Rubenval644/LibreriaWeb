@@ -101,7 +101,7 @@ public class ClienteServlet extends HttpServlet {
             response.sendRedirect("ClienteServlet?action=listar");
 
         } else if ("login".equals(accion)) {
-            //Login cliente
+            //Login de cliente
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 

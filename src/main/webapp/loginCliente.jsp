@@ -9,6 +9,9 @@
                 margin:0;
                 padding:0;
             }
+            h2{
+                text-align: center;
+            }
             .container {
                 width: 400px;
                 margin: 50px auto;
@@ -27,29 +30,36 @@
             button {
                 width:100%;
                 padding:10px;
-                background:#28a745;
+                background:blue;
                 color:white;
                 border:none;
                 border-radius:4px;
                 cursor:pointer;
             }
             button:hover {
-                background:#218838;
+                background:#3366ff;
+            }
+            .volver {
+                display: block;
+                text-align: center;
+                margin-top: 15px;
+                color: blue;
+                text-decoration: none;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h2>Iniciar sesión</h2>
+            <h2>Bienvenido a LibreCrea</h2>
             <form action="ClienteServlet" method="post">
                 <input type="hidden" name="accion" value="login">
                 <label>Email:</label>
-                <input type="email" name="email" required>
+                <input type="email" name="email" required><br><br>
                 <label>Contraseña:</label>
-                <input type="password" name="password" required>
-                <button type="submit">Entrar</button>
+                <input type="password" name="password" required><br><br>
+                <button type="submit">Iniciar sesión</button>
             </form>
-            <a href="tienda.jsp">Volver a la tienda</a>
+            <a href="tienda.jsp" class="volver">Volver a la tienda</a>
         </div>
     </body>
 </html>

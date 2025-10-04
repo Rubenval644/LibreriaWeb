@@ -38,7 +38,7 @@
             button {
                 width: 100%;
                 padding: 10px;
-                background: #28a745;
+                background: blue;
                 color: white;
                 border: none;
                 border-radius: 4px;
@@ -46,7 +46,7 @@
                 cursor: pointer;
             }
             button:hover {
-                background: #218838;
+                background: #3366ff;
             }
             .volver {
                 display: block;
